@@ -11,26 +11,30 @@
             background-color: #f8f9fa;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
+
         .header {
             background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
             color: white;
             padding: 2rem 0;
             margin-bottom: 2rem;
             border-radius: 0 0 20px 20px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
+
         .student-card {
             transition: transform 0.3s, box-shadow 0.3s;
             border-radius: 10px;
             overflow: hidden;
             margin-bottom: 20px;
             border: none;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
+
         .student-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
         }
+
         .student-avatar {
             height: 120px;
             width: 120px;
@@ -41,6 +45,7 @@
             display: block;
             background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
         }
+
         .avatar-placeholder {
             height: 120px;
             width: 120px;
@@ -55,48 +60,57 @@
             font-weight: bold;
             border: 4px solid white;
         }
+
         .card-body {
             padding: 1.5rem;
         }
+
         .student-name {
             color: #2c3e50;
             font-weight: 600;
             margin-bottom: 0.5rem;
             text-align: center;
         }
+
         .student-info {
             color: #7f8c8d;
             margin-bottom: 0.3rem;
             font-size: 0.9rem;
         }
+
         .badge {
             font-size: 0.75rem;
             padding: 0.4em 0.6em;
         }
+
         .search-box {
             max-width: 500px;
             margin: 0 auto 2rem;
         }
+
         .stats-card {
             background: white;
             border-radius: 10px;
             padding: 1.5rem;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
             margin-bottom: 2rem;
             text-align: center;
         }
+
         .stats-number {
             font-size: 2.5rem;
             font-weight: 700;
             color: #6a11cb;
             margin-bottom: 0.5rem;
         }
+
         .stats-label {
             color: #7f8c8d;
             font-size: 0.9rem;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
+
         .footer {
             background-color: #2c3e50;
             color: white;
@@ -104,17 +118,20 @@
             margin-top: 3rem;
             text-align: center;
         }
+
         .action-buttons {
             display: flex;
             gap: 0.5rem;
             justify-content: center;
             margin-top: 1rem;
         }
+
         .empty-state {
             text-align: center;
             padding: 3rem;
             color: #7f8c8d;
         }
+
         .empty-state i {
             font-size: 4rem;
             margin-bottom: 1rem;
@@ -152,6 +169,8 @@
         </div>
     </div>
 
+    <button class="btn btn-primary mb-3" onclick="window.location.href='/students/add'">ADD STUDENT</button>
+
     <!-- Talabalar ro'yxati -->
     <div class="row" id="studentList">
         <!-- Agar talabalar mavjud bo'lsa -->
@@ -176,13 +195,15 @@
                             <div class="mt-3 text-center">
                                 <span class="badge bg-primary">Faol</span>
                                 <span th:if="${student.age < 21}" class="badge bg-success">Yosh talaba</span>
-                                <span th:if="${student.age >= 21}" class="badge bg-warning text-dark">Katta yoshli</span>
+                                <span th:if="${student.age >= 21}"
+                                      class="badge bg-warning text-dark">Katta yoshli</span>
                             </div>
                             <div class="action-buttons">
-                                <button class="btn btn-sm btn-outline-primary">
+                                <button class="btn btn-sm btn-outline-primary" th:onclick="'window.location.href=\'/students/update/' + ${student.id} + '\''">
                                     <i class="fas fa-edit"></i> Tahrirlash
                                 </button>
-                                <button class="btn btn-sm btn-outline-danger" th:onclick="'deleteStudent(' + ${student.id} + ')'">
+                                <button class="btn btn-sm btn-outline-danger"
+                                        th:onclick="'deleteStudent(' + ${student.id} + ')'">
                                     <i class="fas fa-trash"></i> O'chirish
                                 </button>
                             </div>
@@ -218,7 +239,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 <script>
     // Qidiruv funksiyasi
-    document.getElementById('searchButton').addEventListener('click', function() {
+    document.getElementById('searchButton').addEventListener('click', function () {
         const searchText = document.getElementById('searchInput').value.toLowerCase();
         const studentItems = document.querySelectorAll('.student-item');
 
@@ -233,7 +254,7 @@
     });
 
     // Enter tugmasi bilan qidirish
-    document.getElementById('searchInput').addEventListener('keyup', function(event) {
+    document.getElementById('searchInput').addEventListener('keyup', function (event) {
         if (event.key === 'Enter') {
             document.getElementById('searchButton').click();
         }

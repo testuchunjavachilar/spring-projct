@@ -35,13 +35,47 @@ public class StudentService {
         throw new RuntimeException("Student not found");
     }
 
-    public void  deleteStudent(long id){
+    public void deleteStudent(long id) {
         for (Student student : students) {
             if (student.getId() == id) {
                 students.remove(student);
                 return;
             }
         }
+    }
+
+    public void addStudent(String name, int age, String email) {
+
+        students.stream()
+                .filter(student -> student.getEmail().equals(email))
+                .findFirst()
+                .ifPresent(student -> {
+                    throw new RuntimeException("Email already exists");
+                });
+
+        Student student = Student.builder()
+                .id(id.getAndIncrement())
+                .age(age)
+                .name(name)
+                .email(email)
+                .build();
+
+        students.add(student);
+    }
+
+    public void updateStudent(long id, String name, int age, String email) {
+
+        Student student = students.stream()
+                .filter(s -> s.getId() == id)
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Student not found"));
+
+        student.setId(id);
+        student.setName(name);
+        student.setAge(age);
+        student.setEmail(email);
+
+        students.set(students.indexOf(student), student);
     }
 
 

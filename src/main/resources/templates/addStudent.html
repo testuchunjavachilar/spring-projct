@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Add Student</title>
+</head>
+
+<body>
+<form>
+    <label>
+        <input type="text" th:value="${name}" name="name" required placeholder="Name">
+    </label>
+
+    <label>
+        <input type="number" th:value="${age}" name="age" required placeholder="Age">
+    </label>
+
+    <label>
+        <input type="email" th:value="${email}" name="email" required placeholder="Email">
+    </label>
+
+    <button type="submit" th:unless="${name}" formmethod="post">Add Student</button>
+    <button type="submit" th:if="${name}" formmethod="put">Update Student</button>
+
+    <h2 th:if="${message}" th:text="${message}" class="text-danger"></h2>
+
+
+</form>
+</body>
+
+</html>
