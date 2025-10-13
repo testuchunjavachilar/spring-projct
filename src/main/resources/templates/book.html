@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>📚 Kitoblar roʻyxati</title>
+
+    <style>
+        :root {
+            --primary: #2563eb;
+            --secondary: #3b82f6;
+            --danger: #ef4444;
+            --bg: #f9fafb;
+            --text-dark: #1f2937;
+            --text-light: #6b7280;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Inter", system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--text-dark);
+            transition: background 0.3s ease;
+        }
+
+        .container {
+            max-width: 1250px;
+            margin: 32px auto;
+            padding: 0 16px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 28px;
+            animation: fadeInDown 0.6s ease;
+        }
+
+        /* Grid */
+        .books-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 24px;
+            animation: fadeIn 0.8s ease;
+        }
+
+        /* Card */
+        .book-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+            border-top: 4px solid var(--secondary);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .book-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(37, 99, 235, 0.1), transparent);
+            transition: 0.6s;
+        }
+
+        .book-card:hover::before {
+            left: 100%;
+        }
+
+        .book-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .book-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 0;
+            color: var(--text-dark);
+        }
+
+        .book-author {
+            color: var(--text-light);
+            margin-top: 4px;
+            font-size: 0.9rem;
+        }
+
+        .book-desc {
+            margin-top: 12px;
+            font-size: 0.9rem;
+            color: #374151;
+            line-height: 1.5;
+            flex-grow: 1;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 4;
+            -webkit-box-orient: vertical;
+        }
+
+        .book-meta {
+            margin-top: 10px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        /* Buttons */
+        .book-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .btn {
+            padding: 7px 12px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            border: none;
+            transition: all 0.25s ease;
+            font-weight: 500;
+        }
+
+        .btn.primary {
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            color: white;
+            box-shadow: 0 3px 6px rgba(37, 99, 235, 0.25);
+        }
+
+        .btn.primary:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 15px rgba(37, 99, 235, 0.35);
+        }
+
+        .btn.ghost {
+            background: white;
+            border: 1px solid #d1d5db;
+            color: var(--text-dark);
+        }
+
+        .btn.ghost:hover {
+            background: #f3f4f6;
+        }
+
+        .btn.danger {
+            background: white;
+            border: 1px solid var(--danger);
+            color: var(--danger);
+        }
+
+        .btn.danger:hover {
+            background: #fee2e2;
+        }
+
+        .empty {
+            text-align: center;
+            color: var(--text-light);
+            padding: 50px 0;
+            font-size: 1rem;
+            animation: fadeIn 0.8s ease;
+        }
+
+        .empty a {
+            display: inline-block;
+            margin-top: 16px;
+            text-decoration: none;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 10px 18px;
+            border-radius: 8px;
+            transition: transform 0.25s ease;
+        }
+
+        .empty a:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(37, 99, 235, 0.25);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .book-card {
+                padding: 14px;
+            }
+
+            .book-title {
+                font-size: 1.05rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+    <h1>📚 Kitoblar roʻyxati</h1>
+
+    <button class="btn-success" th:onclick="${/book/add}">Add Book</button>
+
+    <!-- Empty state -->
+    <div th:if="${#lists.isEmpty(books)}" class="empty">
+        <p>Hech qanday kitob topilmadi.</p>
+        <a href="/books/new">➕ Yangi kitob qoʻshish</a>
+    </div>
+
+    <!-- Books grid -->
+    <div class="books-grid" th:if="${!#lists.isEmpty(books)}">
+        <div th:each="book : ${books}" class="book-card">
+            <div>
+                <h2 class="book-title" th:text="${book.title}">Kitob sarlavhasi</h2>
+                <p class="book-author" th:text="${book.author}">Muallif</p>
+            </div>
+
+            <p class="book-desc" th:text="${book.description}">Kitob haqida qisqacha...</p>
+
+            <div class="book-meta">
+                <span th:text="${book.price != null ? #numbers.formatDecimal(book.price,1,2) + ' USD' : 'Narx yoʻq'}">12.99 USD</span>
+                <span th:text="${book.createAt != null ? #temporals.format(book.createAt, 'yyyy-MM-dd HH:mm') : ''}">2025-10-10</span>
+            </div>
+
+            <div class="book-actions">
+                <a th:href="@{/books/{id}(id=${book.id})}" class="btn ghost">Ko‘rish</a>
+                <a th:href="@{/books/edit/{id}(id=${book.id})}" class="btn primary">Tahrirlash</a>
+                <form th:action="@{/books/delete/{id}(id=${book.id})}" method="post" style="display:inline;"
+                      th:onsubmit="return confirm('Rostan o‘chirasizmi?');">
+                    <button type="submit" class="btn danger">O‘chirish</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
