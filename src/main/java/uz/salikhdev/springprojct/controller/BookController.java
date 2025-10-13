@@ -4,7 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import uz.salikhdev.springprojct.model.Book;
 import uz.salikhdev.springprojct.service.BookService;
 
 @Controller
@@ -20,9 +23,15 @@ public class BookController {
         return "book";
     }
 
-    @GetMapping("/add") // /book/add
-    public String getAddBookPage(){
+    @GetMapping("/add")
+    public String getAddBookPage() {
         return "addBook";
+    }
+
+    @PostMapping("/add")
+    public String addBook(@ModelAttribute Book book) {
+        bookService.saveBook(book);
+        return "redirect:/book";
     }
 
 }

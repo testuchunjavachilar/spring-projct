@@ -17,4 +17,11 @@ public class Book {
     private Double price;
     private String description;
     private LocalDateTime createAt;
+
+    public Book(String title, String author, Double price, String description) {
+        this.title = title;
+        this.author = author;
+        this.price = price;
+        this.description = description;
+    }
 }

@@ -225,7 +225,7 @@
 <div class="container">
     <h1>📚 Kitoblar roʻyxati</h1>
 
-    <button class="btn-success" th:onclick="${/book/add}">Add Book</button>
+    <button class="btn btn-primary mb-3" onclick="window.location.href='/book/add'">Add Book</button>
 
     <!-- Empty state -->
     <div th:if="${#lists.isEmpty(books)}" class="empty">
