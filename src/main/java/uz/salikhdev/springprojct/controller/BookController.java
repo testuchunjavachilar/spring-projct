@@ -3,10 +3,7 @@ package uz.salikhdev.springprojct.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import uz.salikhdev.springprojct.model.Book;
 import uz.salikhdev.springprojct.service.BookService;
 
@@ -26,6 +23,12 @@ public class BookController {
     @GetMapping("/add")
     public String getAddBookPage() {
         return "addBook";
+    }
+
+    @PostMapping("/{id}")
+    public String deleteBook(@PathVariable("id") Long id) {
+        bookService.deleteBook(id);
+        return "redirect:/book";
     }
 
     @PostMapping("/add")

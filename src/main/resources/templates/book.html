@@ -251,7 +251,7 @@
             <div class="book-actions">
                 <a th:href="@{/books/{id}(id=${book.id})}" class="btn ghost">Ko‘rish</a>
                 <a th:href="@{/books/edit/{id}(id=${book.id})}" class="btn primary">Tahrirlash</a>
-                <form th:action="@{/books/delete/{id}(id=${book.id})}" method="post" style="display:inline;"
+                <form th:action="@{/book/{id}(id=${book.id})}" method="post" style="display:inline;"
                       th:onsubmit="return confirm('Rostan o‘chirasizmi?');">
                     <button type="submit" class="btn danger">O‘chirish</button>
                 </form>

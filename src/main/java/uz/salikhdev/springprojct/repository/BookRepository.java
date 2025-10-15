@@ -1,6 +1,5 @@
 package uz.salikhdev.springprojct.repository;
 
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -47,9 +46,22 @@ public class BookRepository {
             String sql = "SELECT * FROM book;";
             return jdbcTemplate.query(sql, new BookMapper());
 
-        }catch (Exception e){
+        } catch (Exception e) {
             log.error("Error : {}", e.getMessage());
             return null;
+        }
+    }
+
+    public boolean existById(Long id) {
+        try {
+            String sql = "SELECT EXISTS(SELECT 1 FROM book WHERE id=?)";
+
+            Long[] param = {id};
+
+            return jdbcTemplate.queryForObject(sql, param, Boolean.class);
+        } catch (Exception e) {
+            log.error("Error : {}", e.getMessage());
+            return false;
         }
     }
 
