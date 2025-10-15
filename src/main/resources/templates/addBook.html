@@ -161,12 +161,12 @@
     <form action="/book/add" method="post">
         <div>
             <label for="title">Sarlavha</label>
-            <input type="text" id="title" name="title" placeholder="Masalan: Java Asoslari" required>
+            <input type="text" id="title" name="title" placeholder="Masalan: Java Asoslari">
         </div>
 
         <div>
             <label for="author">Muallif</label>
-            <input type="text" id="author" name="author" placeholder="Masalan: Joshua Bloch" required>
+            <input type="text" id="author" name="author" placeholder="Masalan: Joshua Bloch">
         </div>
 
         <div>
@@ -184,7 +184,8 @@
             <button type="submit" formmethod="post" class="btn primary">💾 Saqlash</button>
         </div>
     </form>
-    <p th:if="error" ></p>
+    <h2 th:if="${error}" th:text="${error}" class="text-danger"></h2>
+
 </div>
 </body>
 </html>

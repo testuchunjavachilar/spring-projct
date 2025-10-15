@@ -8,12 +8,10 @@ import uz.salikhdev.springprojct.exception.FiledNotCompletedException;
 @ControllerAdvice
 public class ErrorHandleController {
 
-
     @ExceptionHandler(value = {FiledNotCompletedException.class})
     public String handleException(Exception exception, Model model) {
         model.addAttribute("error", exception.getMessage());
         return "addBook";
     }
-
 
 }
