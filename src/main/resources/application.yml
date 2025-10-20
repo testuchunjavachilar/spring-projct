@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: spring-projct
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/spring_test
+    username: salikhdev
+    password: 1234
+    driver-class-name: org.postgresql.Driver
+
+  sql:
+    init:
+      mode: always
