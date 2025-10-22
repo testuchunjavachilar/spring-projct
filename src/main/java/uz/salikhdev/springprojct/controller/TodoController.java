@@ -34,8 +34,7 @@ public class TodoController {
     public ResponseEntity<MessageDto> createTodo(@RequestParam String title, @RequestParam String description) {
         todoService.saveTodo(new TodoCreateDto(title, description));
         return ResponseEntity.status(HttpStatus.CREATED).body(
-                MessageDto
-                        .builder()
+                MessageDto.builder()
                         .message("Todo success created")
                         .status(true)
                         .timestamp(LocalDateTime.now().toString())
@@ -44,10 +43,28 @@ public class TodoController {
     }
 
 
-    @PostMapping("/todos/status")
-    public ResponseEntity<?> updateStatus() {
-        return null;
+    @PostMapping("/todos/status/{id}")
+    public ResponseEntity<MessageDto> updateStatus(@RequestParam("status") String status, @PathVariable Long id) {
+        todoService.updateStatus(id, status);
+        return ResponseEntity.ok(
+                MessageDto.builder()
+                        .message("Status success updated")
+                        .status(true)
+                        .timestamp(LocalDateTime.now().toString())
+                        .build()
+        );
     }
 
+    @DeleteMapping("/todos/{id}")
+    public ResponseEntity<?> deleteTodo(@PathVariable Long id) {
+        todoService.deleteTodo(id);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                MessageDto.builder()
+                        .message("Todo success deleted")
+                        .status(true)
+                        .timestamp(LocalDateTime.now().toString())
+                        .build()
+        );
+    }
 
 }

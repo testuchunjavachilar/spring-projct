@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import uz.salikhdev.springprojct.mapper.TodoMapper;
+import uz.salikhdev.springprojct.model.Status;
 import uz.salikhdev.springprojct.model.Todo;
 
 import java.util.List;
@@ -45,6 +46,34 @@ public class TodoRepository {
             log.error("Xatolik: {}", e.getMessage());
             throw new RuntimeException(e.getMessage());
         }
+    }
+
+    public void updateStatus(Status newStatus, Long id) {
+        try {
+            String query = "UPDATE todo SET status = ? WHERE id=?";
+            Object[] args = {newStatus.name(), id};
+            jdbcTemplate.update(query, args);
+        } catch (Exception e) {
+            log.error("Xatolik: {}", e.getMessage());
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    public void deteleTodo(Long id) {
+        try {
+            String query = "DELETE FROM todo WHERE id=?";
+            Object[] args = {id};
+            jdbcTemplate.update(query, args);
+        } catch (Exception e) {
+            log.error("Xatolik: {}", e.getMessage());
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    public boolean existById(Long id){
+        String query = "SELECT EXISTS (SELECT 1 FROM todo WHERE id = ?)";
+        Object[] args = {id};
+        return jdbcTemplate.queryForObject(query, args, Boolean.class);
     }
 
 }

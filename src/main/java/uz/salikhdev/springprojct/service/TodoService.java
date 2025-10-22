@@ -3,6 +3,7 @@ package uz.salikhdev.springprojct.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import uz.salikhdev.springprojct.dto.TodoCreateDto;
+import uz.salikhdev.springprojct.exception.NotFoundException;
 import uz.salikhdev.springprojct.model.Status;
 import uz.salikhdev.springprojct.model.Todo;
 import uz.salikhdev.springprojct.repositroy.TodoRepository;
@@ -43,9 +44,20 @@ public class TodoService {
     public Todo getById(Long id) {
         Todo todo = todoRepository.getById(id);
         if (todo == null) {
-            throw new RuntimeException("Todo not found ");
+            throw new NotFoundException("Todo not found");
         }
         return todo;
     }
 
+    public void updateStatus(Long id, String status) {
+        Status newStatus = Status.fromString(status);
+        todoRepository.updateStatus(newStatus, id);
+    }
+
+    public void deleteTodo(Long id) {
+        if (!todoRepository.existById(id)) {
+            throw new NotFoundException("Todo not found");
+        }
+        todoRepository.deteleTodo(id);
+    }
 }
