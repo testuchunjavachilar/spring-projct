@@ -1,28 +1,39 @@
 package uz.salikhdev.springprojct.controller;
 
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uz.salikhdev.springprojct.dto.MessageDto;
 import uz.salikhdev.springprojct.dto.TodoCreateDto;
-import uz.salikhdev.springprojct.model.Todo;
+import uz.salikhdev.springprojct.entity.Todo;
 import uz.salikhdev.springprojct.service.TodoService;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@Tag(name = "Todo")
 public class TodoController {
 
     private final TodoService todoService;
 
     @GetMapping("/todos")
-    public ResponseEntity<List<Todo>> getAll() {
-        return ResponseEntity.ok(todoService.getAll());
+    @Operation(summary = "barcha todolarni olish")
+    public ResponseEntity<?> getAll(
+            @RequestParam(required = false) String status
+    ) {
+
+        if (status == null) {
+            return ResponseEntity.ok(todoService.getAll());
+        } else {
+            return ResponseEntity.ok(todoService.getByStatus(status));
+        }
     }
+
 
     @GetMapping("/todos/{id}")
     public ResponseEntity<Todo> getTodo(@PathVariable Long id) {

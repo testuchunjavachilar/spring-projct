@@ -3,12 +3,14 @@ package uz.salikhdev.springprojct.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import uz.salikhdev.springprojct.dto.TodoCreateDto;
+import uz.salikhdev.springprojct.dto.TodoListDto;
+import uz.salikhdev.springprojct.entity.Status;
+import uz.salikhdev.springprojct.entity.Todo;
 import uz.salikhdev.springprojct.exception.NotFoundException;
-import uz.salikhdev.springprojct.model.Status;
-import uz.salikhdev.springprojct.model.Todo;
 import uz.salikhdev.springprojct.repositroy.TodoRepository;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -37,27 +39,59 @@ public class TodoService {
         todoRepository.save(todo);
     }
 
-    public List<Todo> getAll() {
-        return todoRepository.getAll();
+    public List<TodoListDto> getAll() {
+        List<Todo> all = todoRepository.findAll();
+        List<TodoListDto> dtos = new ArrayList<>();
+
+        for (Todo todo : all) {
+
+            TodoListDto d = TodoListDto.builder()
+                    .id(todo.getId())
+                    .title(todo.getTitle())
+                    .build();
+
+            dtos.add(d);
+
+        }
+
+        return dtos;
     }
 
     public Todo getById(Long id) {
-        Todo todo = todoRepository.getById(id);
-        if (todo == null) {
-            throw new NotFoundException("Todo not found");
-        }
-        return todo;
+        return todoRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Todo not found"));
     }
 
     public void updateStatus(Long id, String status) {
-        Status newStatus = Status.fromString(status);
-        todoRepository.updateStatus(newStatus, id);
+        Todo todo = getById(id);
+        todo.setStatus(Status.fromString(status));
+        todoRepository.save(todo);
     }
 
     public void deleteTodo(Long id) {
-        if (!todoRepository.existById(id)) {
-            throw new NotFoundException("Todo not found");
+
+        if (!todoRepository.existsById(id)) {
+            throw new NotFoundException("Already deleted");
         }
-        todoRepository.deteleTodo(id);
+
+        todoRepository.deleteById(id);
     }
+
+    public List<TodoListDto> getByStatus(String status) {
+
+        List<Todo> all = todoRepository.findAllByStatus(Status.fromString(status));
+        List<TodoListDto> dtos = new ArrayList<>();
+
+        for (Todo todo : all) {
+            TodoListDto d = TodoListDto.builder()
+                    .id(todo.getId())
+                    .title(todo.getTitle())
+                    .build();
+
+            dtos.add(d);
+        }
+
+        return dtos;
+    }
+
 }

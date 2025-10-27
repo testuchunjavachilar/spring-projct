@@ -1,4 +1,4 @@
-package uz.salikhdev.springprojct.model;
+package uz.salikhdev.springprojct.entity;
 
 public enum Status {
     TODO,
