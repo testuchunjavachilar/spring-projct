@@ -2,6 +2,7 @@ package uz.salikhdev.springprojct.config.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -12,6 +13,7 @@ import uz.salikhdev.springprojct.config.security.filter.TokenAuthenticationFilte
 import uz.salikhdev.springprojct.config.security.filter.TokenAuthenticationProvider;
 
 @Configuration
+@EnableMethodSecurity
 public class SecurityConfig {
 
     private final String[] WHITE_LIST = {
@@ -32,6 +34,8 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(WHITE_LIST).permitAll()
+                        // .requestMatchers(ADMIN_LIST).hasRole("ADMIN")
+                        // .requestMatchers(ADMIN_LIST).hasAnyRole("ADMIN" , "STUDENT")
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -39,6 +43,7 @@ public class SecurityConfig {
                 .addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(eConfig -> {
                     eConfig.authenticationEntryPoint(entryPoint);
+                    // eConfig.accessDeniedHandler()
                 });
 
         return http.build();

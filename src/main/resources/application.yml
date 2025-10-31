@@ -3,7 +3,7 @@ spring:
     name: spring-projct
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/crm_db
+    url: jdbc:postgresql://localhost:5432/social_media
     password: 1234
     username: salikhdev
     driver-class-name: org.postgresql.Driver

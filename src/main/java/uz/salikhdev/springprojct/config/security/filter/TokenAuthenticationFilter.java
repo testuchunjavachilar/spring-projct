@@ -12,7 +12,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
-import uz.salikhdev.springprojct.dto.MessageResponse;
+import uz.salikhdev.springprojct.dto.response.MessageResponse;
 import uz.salikhdev.springprojct.excetion.InvalidTokenException;
 
 import java.io.IOException;

@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
-import uz.salikhdev.springprojct.entity.User;
+import uz.salikhdev.springprojct.entity.user.User;
 import uz.salikhdev.springprojct.excetion.InvalidTokenException;
 import uz.salikhdev.springprojct.repository.UserRepository;
 

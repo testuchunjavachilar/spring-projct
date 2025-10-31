@@ -1,4 +1,4 @@
-package uz.salikhdev.springprojct.dto;
+package uz.salikhdev.springprojct.dto.response;
 
 import lombok.Builder;
 

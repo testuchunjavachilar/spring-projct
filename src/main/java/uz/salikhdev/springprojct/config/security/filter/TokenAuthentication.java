@@ -4,7 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import uz.salikhdev.springprojct.entity.User;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import uz.salikhdev.springprojct.entity.user.User;
 
 import java.util.Collection;
 import java.util.List;
@@ -23,7 +24,7 @@ public class TokenAuthentication implements Authentication {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        return List.of(new SimpleGrantedAuthority("ROLE_" + user.getRole().name()));
     }
 
     @Override
@@ -54,7 +55,7 @@ public class TokenAuthentication implements Authentication {
     @Override
     public String getName() {
         if (user != null) {
-            return user.getEmail();
+            return user.getUsername();
         } else {
             return null;
         }

@@ -1,10 +1,10 @@
-package uz.salikhdev.springprojct.dto;
+package uz.salikhdev.springprojct.dto.request;
 
 import lombok.Builder;
 
 @Builder
 public record UserLoginDto(
-        String email,
+        String username,
         String password
 ) {
 }
