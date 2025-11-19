@@ -8,6 +8,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import uz.salikhdev.springprojct.config.security.filter.TokenAuthenticationFilter;
 
+import java.util.Random;
+
 @Configuration
 public class AppConfig {
 
@@ -24,6 +26,11 @@ public class AppConfig {
     @Bean
     public TokenAuthenticationFilter tokenAuthenticationFilter(AuthenticationManager authManager) {
         return new TokenAuthenticationFilter(authManager);
+    }
+
+    @Bean
+    public Random random() {
+        return new Random();
     }
 
 }
