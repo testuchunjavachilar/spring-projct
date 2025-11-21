@@ -3,9 +3,9 @@ spring:
     name: spring-projct
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/social_media
+    url: jdbc:postgresql://localhost:5444/social_media
     password: 1234
-    username: salikhdev
+    username: postgres
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -16,6 +16,12 @@ spring:
     properties:
       hibernate:
         format_sql: true
+
+  data:
+    redis:
+      host: localhost
+      port: 6333
+      database: 0
 
 springdoc:
   swagger-ui:

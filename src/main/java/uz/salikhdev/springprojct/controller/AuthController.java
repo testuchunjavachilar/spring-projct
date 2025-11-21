@@ -1,5 +1,6 @@
 package uz.salikhdev.springprojct.controller;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,7 @@ import uz.salikhdev.springprojct.service.AuthService;
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
+@Tag(name = "Auth", description = "User authentication and registration APIs")
 public class AuthController {
 
     private final AuthService authService;

@@ -1,6 +1,5 @@
-package uz.salikhdev.springprojct.entity.post;
+package uz.salikhdev.springprojct.entity.comment;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -12,7 +11,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
+import org.hibernate.annotations.CreationTimestamp;
+import uz.salikhdev.springprojct.entity.post.Post;
 import uz.salikhdev.springprojct.entity.user.User;
 
 import java.time.LocalDateTime;
@@ -20,28 +20,28 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Builder
-@ToString
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(name = "post")
-public class Post {
+@Entity(name = "comment")
+public class Comment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String title;
-    private String description;
+    private String content;
 
-    @Column(name = "resource_url")
-    private String resourceUrl;
-
-    @Column(name = "created_at")
+    @CreationTimestamp
     private LocalDateTime createdAt;
 
-    @Column(name = "delete_at")
-    private LocalDateTime deleteAt;
+    private LocalDateTime deletedAt;
+
+    private Boolean isActive;
 
     @ManyToOne
-    @JoinColumn(name = "user_id" , referencedColumnName = "id")
-    private User user;
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User author;
+
+    @ManyToOne
+    @JoinColumn(name = "post_id", referencedColumnName = "id")
+    private Post post;
 }

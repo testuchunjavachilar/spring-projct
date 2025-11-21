@@ -36,9 +36,17 @@ dependencies {
     // Database
     runtimeOnly("org.postgresql:postgresql")
 
+    // Caching
+    implementation("org.springframework.boot:spring-boot-starter-data-redis")
+
     // Lombok
     compileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")
+
+    // Mapstruct
+    implementation("org.mapstruct:mapstruct:1.5.5.Final")
+    annotationProcessor("org.mapstruct:mapstruct-processor:1.5.5.Final")
+    implementation("org.projectlombok:lombok-mapstruct-binding:0.2.0")
 
     // Test
     testImplementation("org.springframework.boot:spring-boot-starter-test")

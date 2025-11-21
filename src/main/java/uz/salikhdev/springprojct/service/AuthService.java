@@ -3,6 +3,7 @@ package uz.salikhdev.springprojct.service;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import uz.salikhdev.springprojct.dto.request.RestartPasswordDto;
@@ -17,10 +18,9 @@ import uz.salikhdev.springprojct.excetion.BadCredentialsException;
 import uz.salikhdev.springprojct.excetion.NotFoundException;
 import uz.salikhdev.springprojct.repository.UserRepository;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Service
@@ -30,7 +30,7 @@ public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder encoder;
     private final Random random;
-    private Map<String, String> codes = new HashMap<>();
+    private final StringRedisTemplate redis;
 
     public void register(UserRegisterDto dto) {
 
@@ -43,6 +43,7 @@ public class AuthService {
                 .password(encoder.encode(dto.password()))
                 .firstname(dto.firstname())
                 .isActive(true)
+                .email(dto.email())
                 .role(UserRole.USER)
                 .build();
 
@@ -65,9 +66,9 @@ public class AuthService {
         String token = UUID.randomUUID().toString();
 
         user.setToken(token);
-        userRepository.save(user);
+        User saveUser = userRepository.save(user);
 
-        return TokenResponse.builder().token(token).role(user.getRole().name()).build();
+        return TokenResponse.builder().token(token).id(saveUser.getId()).role(user.getRole().name()).build();
     }
 
     public void logOut(User user) {
@@ -85,14 +86,13 @@ public class AuthService {
         }
 
         String code = String.valueOf(random.nextInt(1000, 9999));
-        codes.put(user.getEmail(), code);
         // TODO : SEND code TO EMAIL
-
+        redis.opsForValue().set(dto.email(), code, 2, TimeUnit.MINUTES);
         return code;
     }
 
     public void verifyCode(@Valid VerifyCondeDto dto) {
-        String ramCode = codes.get(dto.email());
+        String ramCode = redis.opsForValue().get(dto.email());
 
         if (ramCode == null || !ramCode.equals(dto.code())) {
             throw new BadCredentialsException("Invalid code");
@@ -101,5 +101,6 @@ public class AuthService {
                 .orElseThrow(() -> new NotFoundException("User not found with email: " + dto.email()));
         user.setPassword(encoder.encode(dto.newPassword()));
         userRepository.save(user);
+        redis.delete(dto.email());
     }
 }

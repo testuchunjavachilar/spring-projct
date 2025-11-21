@@ -24,6 +24,13 @@ public class GlobalExceptionController {
         );
     }
 
+    @ExceptionHandler(BadRequestException.class)
+    private ResponseEntity<?> badRequest(Exception e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                MessageResponse.error(e.getMessage())
+        );
+    }
+
     @ExceptionHandler(NotFoundException.class)
     private ResponseEntity<?> notFoud(Exception e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
