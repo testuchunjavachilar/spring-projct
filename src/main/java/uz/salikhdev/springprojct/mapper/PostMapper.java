@@ -11,7 +11,13 @@ import java.util.List;
 public interface PostMapper {
 
     @Mapping(source = "user.username", target = "author")
+    @Mapping(target = "likes", expression = "java(likeCount(post))")
     PostResponse toResponse(Post post);
 
     List<PostResponse> toResponse(List<Post> posts);
+
+    default long likeCount(Post post) {
+        return post.getLikes() != null ? post.getLikes().size() : 0;
+    }
+
 }

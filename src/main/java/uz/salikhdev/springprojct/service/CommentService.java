@@ -47,12 +47,15 @@ public class CommentService {
     public void deleteComment(Long id, User user) {
         Comment comment = commentRepository.findByIdAndDeletedAtIsNull(id)
                 .orElseThrow(() -> new NotFoundException("Comment not found"));
-        // TODO CHECK DELETE
 
-        if (!comment.getAuthor().getId().equals(user.getId())) {
+        if (comment.getPost().getUser().getId().equals(user.getId())) {
+            commentRepository.deleteById(comment.getId());
+        } else if (comment.getAuthor().getId().equals(user.getId())) {
+            commentRepository.deleteById(comment.getId());
+        } else {
             throw new BadRequestException("You are not authorized to delete this comment");
         }
-
-        commentRepository.deleteById(comment.getId());
     }
+
+
 }

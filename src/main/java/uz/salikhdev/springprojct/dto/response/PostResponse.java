@@ -10,6 +10,7 @@ public record PostResponse(
         String title,
         String description,
         String resourceUrl,
+        Long likes,
         String author,
         LocalDateTime createdAt
 ) {

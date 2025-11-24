@@ -12,6 +12,7 @@ public class GlobalExceptionController {
 
     @ExceptionHandler(RuntimeException.class)
     private ResponseEntity<?> error(Exception e) {
+        e.printStackTrace();
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                 MessageResponse.error(e.getMessage())
         );
@@ -19,6 +20,8 @@ public class GlobalExceptionController {
 
     @ExceptionHandler(AlreadyExistException.class)
     private ResponseEntity<?> already(Exception e) {
+        e.printStackTrace();
+
         return ResponseEntity.status(HttpStatus.CONFLICT).body(
                 MessageResponse.error(e.getMessage())
         );
@@ -26,6 +29,7 @@ public class GlobalExceptionController {
 
     @ExceptionHandler(BadRequestException.class)
     private ResponseEntity<?> badRequest(Exception e) {
+        e.printStackTrace();
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                 MessageResponse.error(e.getMessage())
         );
@@ -33,6 +37,8 @@ public class GlobalExceptionController {
 
     @ExceptionHandler(NotFoundException.class)
     private ResponseEntity<?> notFoud(Exception e) {
+        e.printStackTrace();
+
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                 MessageResponse.error(e.getMessage())
         );
