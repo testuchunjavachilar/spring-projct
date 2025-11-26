@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import uz.salikhdev.springprojct.dto.request.CommentRequest;
+import uz.salikhdev.springprojct.dto.request.CommentDto;
 import uz.salikhdev.springprojct.dto.response.MessageResponse;
 import uz.salikhdev.springprojct.entity.user.User;
 import uz.salikhdev.springprojct.service.CommentService;
@@ -31,7 +31,7 @@ public class CommentController {
 
     @PostMapping
     public ResponseEntity<?> addComment(
-            @RequestBody CommentRequest request,
+            @RequestBody CommentDto request,
             @AuthenticationPrincipal User user) {
         commentService.createComment(request, user);
         return ResponseEntity.ok(MessageResponse.success("Comment added successfully"));

@@ -26,7 +26,7 @@ public class AuthController {
 
     private final AuthService authService;
 
-    @PostMapping("/register")
+    @PostMapping(path = "/register")
     public ResponseEntity<?> register(@RequestBody @Valid UserRegisterDto dto) {
         authService.register(dto);
         return ResponseEntity.status(201).body(MessageResponse.success("User registered successfully"));

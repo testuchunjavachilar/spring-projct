@@ -17,9 +17,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.CreationTimestamp;
 import uz.salikhdev.springprojct.entity.like.Like;
 import uz.salikhdev.springprojct.entity.post.Post;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -40,6 +42,7 @@ public class User {
     private String lastname;
     private String token;
     private String email;
+    private String bio;
     private String password;
     @Column(name = "is_active", columnDefinition = "BOOLEAN DEFAULT TRUE")
     private Boolean isActive;
@@ -53,4 +56,7 @@ public class User {
 
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Like> likes;
+
+    @CreationTimestamp
+    private LocalDateTime createdAt;
 }

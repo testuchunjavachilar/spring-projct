@@ -2,7 +2,7 @@ package uz.salikhdev.springprojct.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import uz.salikhdev.springprojct.dto.request.CommentRequest;
+import uz.salikhdev.springprojct.dto.request.CommentDto;
 import uz.salikhdev.springprojct.dto.response.CommentResponse;
 import uz.salikhdev.springprojct.entity.comment.Comment;
 import uz.salikhdev.springprojct.entity.post.Post;
@@ -30,7 +30,7 @@ public class CommentService {
         return commentMapper.toResponse(all);
     }
 
-    public void createComment(CommentRequest request, User user) {
+    public void createComment(CommentDto request, User user) {
         Post post = postRepository.findById(request.postId())
                 .orElseThrow(() -> new NotFoundException("Post not found"));
 

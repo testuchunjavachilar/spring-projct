@@ -21,6 +21,10 @@ public class TokenAuthenticationProvider implements AuthenticationProvider {
         User user = userRepository.findByToken(token)
                 .orElseThrow(() -> new InvalidTokenException("Invalid Token"));
 
+        if (!user.getIsActive()) {
+            throw new InvalidTokenException("User is blocked");
+        }
+
         TokenAuthentication auth = new TokenAuthentication(token);
         auth.setUser(user);
         auth.setAuthenticated(true);
