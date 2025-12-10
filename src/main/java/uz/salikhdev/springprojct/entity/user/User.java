@@ -40,6 +40,8 @@ public class User {
     private String username;
     private String firstname;
     private String lastname;
+    @Column(name = "image_url")
+    private String imageUrl;
     private String token;
     private String email;
     private String bio;

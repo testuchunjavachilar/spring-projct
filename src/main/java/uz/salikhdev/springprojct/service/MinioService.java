@@ -4,13 +4,23 @@ import io.minio.BucketExistsArgs;
 import io.minio.MakeBucketArgs;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
+import io.minio.RemoveObjectArgs;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import net.coobird.thumbnailator.Thumbnails;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class MinioService {
@@ -20,27 +30,114 @@ public class MinioService {
     @Value("${minio.bucket}")
     private String bucket;
 
-    public String upload(MultipartFile file) throws Exception {
+    public Map<String, String> upload(MultipartFile file, String folderName) {
 
-        String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename() + "_" + System.currentTimeMillis();
+        try {
+            String fileName = folderName + "/" + UUID.randomUUID() + "_" + System.currentTimeMillis() + "_" + file.getOriginalFilename();
 
-        boolean exists = client.bucketExists(
-                BucketExistsArgs.builder().bucket(bucket).build()
-        );
+            boolean exists = client.bucketExists(
+                    BucketExistsArgs.builder().bucket(bucket).build()
+            );
 
-        if (!exists) {
-            client.makeBucket(MakeBucketArgs.builder().bucket(bucket).build());
-        }
+            if (!exists) {
+                client.makeBucket(MakeBucketArgs.builder().bucket(bucket).build());
+            }
 
-        client.putObject(
-                PutObjectArgs.builder()
+
+            String originalFilename = file.getOriginalFilename();
+            String extension = "";
+
+            if (originalFilename != null && originalFilename.contains(".")) {
+                extension = originalFilename.substring(originalFilename.lastIndexOf(".") + 1);
+            }
+
+
+            File compressedFile = null;
+
+            try {
+                if (isImageFile(extension)) {
+                    compressedFile = compressImage(file);
+                }
+
+                InputStream inputStream;
+                long size;
+
+                if (compressedFile != null) {
+                    inputStream = new FileInputStream(compressedFile);
+                    size = compressedFile.length();
+                } else {
+                    inputStream = file.getInputStream();
+                    size = file.getSize();
+                }
+
+                PutObjectArgs build = PutObjectArgs.builder()
                         .bucket(bucket)
                         .object(fileName)
-                        .stream(file.getInputStream(), file.getSize(), -1)
+                        .stream(inputStream, size, -1)
                         .contentType(file.getContentType())
-                        .build()
-        );
+                        .build();
+                client.putObject(
+                        build
+                );
 
-        return bucket + "/" + fileName;
+                inputStream.close();
+                if (compressedFile != null) compressedFile.delete();
+
+                Map<String, String> map = new HashMap<>();
+                map.put("fileName", bucket + "/" + fileName);
+                map.put("size", String.valueOf(build.objectSize()));
+                return map;
+            } catch (Exception e) {
+                log.error("Save error: {}", e.getMessage());
+                e.printStackTrace();
+                throw new RuntimeException(e.getMessage());
+            }
+
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
+
+    public void delete(String fileName) {
+        try {
+            String replace = fileName.replace(bucket + "/", "");
+            client.removeObject(
+                    RemoveObjectArgs.builder().bucket(bucket).object(replace).build());
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+
+    private File compressImage(MultipartFile file) throws IOException {
+        File tempFile = File.createTempFile("compressed_", ".jpg");
+
+        double quality = 0.8; // Boshlang‘ich sifat
+        Thumbnails.of(file.getInputStream())
+                .size(800, 800)
+                .outputQuality(quality)
+                .outputFormat("jpg")
+                .toFile(tempFile);
+
+        // Agar hajm katta chiqsa, sifatni pasaytirib qayta yozamiz
+        while (tempFile.length() > 1024 * 1024 && quality > 0.3) {
+            quality -= 0.1;
+            Thumbnails.of(file.getInputStream())
+                    .size(800, 800)
+                    .outputQuality(quality)
+                    .outputFormat("jpg")
+                    .toFile(tempFile);
+        }
+
+        log.info("Compressed image size: {} KB", tempFile.length() / 1024);
+        return tempFile;
+    }
+
+
+    private boolean isImageFile(String ext) {
+        String e = ext.toLowerCase();
+        return e.equals("jpg") || e.equals("jpeg") || e.equals("png") || e.equals("webp");
+    }
+
 }

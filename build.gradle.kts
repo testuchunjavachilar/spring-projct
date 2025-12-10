@@ -36,6 +36,9 @@ dependencies {
     // Database
     runtimeOnly("org.postgresql:postgresql")
 
+    // image cutter
+    implementation("net.coobird:thumbnailator:0.4.20")
+
     // Caching
     implementation("org.springframework.boot:spring-boot-starter-data-redis")
 
